@@ -2,6 +2,9 @@
 
 > An electron-vue project
 
+![avatar](./img/1.png)
+![avatar](./img/2.png)
+
 #### Build Setup
 
 ``` bash
