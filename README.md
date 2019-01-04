@@ -5,6 +5,8 @@
 ![avatar](./img/1.png)
 ![avatar](./img/2.png)
 
+> stack : node.js + electron + vue + sqlite + og-sdk
+
 #### Build Setup
 
 ``` bash
