@@ -31,3 +31,9 @@ This project was generated with [electron-vue](https://github.com/SimulatedGREG/
 # og-wallet
 
 [download](https://github.com/annchain/OGWallet/releases/tag/v0.1.2)
+
+[mac](https://github.com/annchain/OGWallet/releases/download/v0.1.2/OG-wallet-v0.1.2-darwin-x64.zip)
+
+[linux](https://github.com/annchain/OGWallet/releases/download/v0.1.2/OG-wallet-v0.1.2-linux-x64.zip)
+
+[windows](https://github.com/annchain/OGWallet/releases/download/v0.1.2/OG-wallet-v0.1.2-win32-x64.zip)
