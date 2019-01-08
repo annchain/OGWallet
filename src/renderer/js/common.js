@@ -5,14 +5,21 @@ const CryptoJS = require('crypto-js')
 const promise = require('bluebird')
 const pdfMake = require('pdfmake/build/pdfmake.js')
 const pdfFonts = require('pdfmake/build/vfs_fonts.js')
-const config = require('../config/config.js')
+// const config = require('../config/config.js')
 pdfMake.vfs = pdfFonts.pdfMake.vfs
 
 var og = new OG()
 
-og.setProvider(
-  new OG.providers.HttpProvider(config.OG_RPC.HttpProvider)
-)
+db.query('SELECT * from conn where id = 1').then((data) => {
+  console.log(data.data[0].url)
+  og.setProvider(
+    new OG.providers.HttpProvider(data.data[0].url)
+  )
+})
+
+// og.setProvider(
+//   new OG.providers.HttpProvider(config.OG_RPC.HttpProvider)
+// )
 
 db.query('SELECT * from txHistory where cStatus == "pending"').then((data) => {
   console.log(data)
@@ -25,15 +32,30 @@ var checkTxStatus = function (txHash) {
   console.log(txHash)
   og.confirm(txHash).then((data) => {
     console.log(txHash, data)
-    if (data.confirm) {
-      var status = data.confirm.toString() // do not use true or false expect use success or failed
-      var sql = 'UPDATE txHistory SET cStatus = "' + status + '" where txHash = ' + '"' + txHash + '"'
-      db.execute(sql)
+    if (typeof data.confirm === 'boolean') {
+      if (data.confirm) {
+        var status = 'success'
+      } else {
+        // eslint-disable-next-line no-redeclare
+        var status = 'failed'
+      }
+    } else {
+      // eslint-disable-next-line no-redeclare
+      var status = data.message // do not use true or false expect use success or failed
     }
+    var sql = 'UPDATE txHistory SET cStatus = "' + status + '" where txHash = ' + '"' + txHash + '"'
+    console.log(sql)
+    db.execute(sql)
   })
 }
 
 var C = {}
+
+C.changeConn = function (url) {
+  console.log(url)
+  var sql = 'UPDATE conn Set url ="' + url + '" where id = 1'
+  return db.execute(sql)
+}
 
 C.getNetInfo = function () {
   return og.net_info()

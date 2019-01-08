@@ -1,5 +1,5 @@
-<template>
-  <div id="wrapper">
+<template >
+  <div id="wrapper" v-loading="loading">
     <img id="logo" src="~@/assets/ann.png" alt="electron-vue">
     <!-- <img id="logo" src="~@/assets/logo.png" alt="electron-vue"> -->
     <main v-if="isRouterAlive">
@@ -16,11 +16,36 @@
       <el-dialog
         title="NODE INFO"
         :visible.sync="dialogVisible"
-        width="78%"
+        width="50%"
+        top="0.5%"
         :show-close="false">
-        <span>{{network_status}}</span>
+        <div class="title alt small" style="margin-top: 10px;">now connecting to ...</div>
+        <div id="networkStatusInfo">
+          {{nowLinkTo}}
+        </div>
+        <div class="title alt small" style="margin-top: 10px;">info:</div>
+        <div id="networkStatusInfo">
+          <pre style="overflow-x: auto;white-space: pre-line;">
+            <code>{{network_status}}</code>
+          </pre>
+        </div>
         <span slot="footer" class="dialog-footer">
+          <el-button type="warning" round @click="dialogVisible = false;dialogVisible2 = true">change connection</el-button>
           <el-button type="success" round @click="dialogVisible = false">ok</el-button>
+        </span>
+      </el-dialog>
+      <el-dialog
+        title="SET CONNECTION"
+        :visible.sync="dialogVisible2"
+        width="50%"
+        :show-close="false">
+        <span  class="title alt">connection url:</span>
+        <el-input v-model="connURL" placeholder="please input the connection url." style="margin-top: 10px">
+          <template slot="prepend">http://</template>
+        </el-input>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="danger" round @click="dialogVisible2 = false">cancel</el-button>
+          <el-button type="success" round @click="setConnetction">set</el-button>
         </span>
       </el-dialog>
       <div class="left-side">
@@ -57,18 +82,6 @@
   import sqlite from '../db/db.js'
   import config from '../config/config.js'
 
-  var initPage = function () {
-    sqlite.createTable('CREATE TABLE  IF NOT EXISTS usr (account_name CHAR, account_hint CHAR, address CHAR PRIMARY KEY UNIQUE, pubKey CHAR UNIQUE, pubKey_raw CHAR UNIQUE, privKey CHAR UNIQUE, balance_OG DOUBLE DEFAULT (0))').then((data) => {
-      console.log(data)
-      return sqlite.createTable('CREATE TABLE  IF NOT EXISTS txHistory (txHash CHAR PRIMARY KEY UNIQUE, cStatus CHAR, cFrom CHAR, cTo CHAR, cAmount DOUBLE, ConfirmTime CHAR)')
-    }).then((data) => {
-      console.log(data)
-      return sqlite.query('SELECT * FROM usr')
-    }).then().catch((err) => {
-      console.log('err=', err)
-    })
-  }
-
   export default {
     name: 'index-page',
     data () {
@@ -78,22 +91,48 @@
         netWork_GREEN: false,
         nowLinkTo: '',
         network_status: 'please check your connection',
-        dialogVisible: false
+        dialogVisible: false,
+        dialogVisible2: false,
+        connURL: '',
+        loading: true
       }
     },
     created: function () {
-      C.getNetInfo().then((data) => {
+      sqlite.createTable('CREATE TABLE IF NOT EXISTS usr (account_name CHAR, account_hint CHAR, address CHAR PRIMARY KEY UNIQUE, pubKey CHAR UNIQUE, pubKey_raw CHAR UNIQUE, privKey CHAR UNIQUE, balance_OG DOUBLE DEFAULT (0))').then((data) => {
         console.log(data)
-        this.network_status = data
-        this.netWork_GREEN = true
-        this.netWork_RED = false
-        this.nowLinkTo = config.OG_RPC.HttpProvider
+        return sqlite.createTable('CREATE TABLE IF NOT EXISTS txHistory (txHash CHAR PRIMARY KEY UNIQUE, cStatus CHAR, cFrom CHAR, cTo CHAR, cAmount DOUBLE, ConfirmTime CHAR)')
+      }).then((data) => {
+        console.log(data)
+        return sqlite.query('SELECT * FROM usr')
+      }).then().catch((err) => {
+        console.log('err=', err)
+      })
+      sqlite.createTable('CREATE TABLE IF NOT EXISTS conn (id INT PRIMARY KEY UNIQUE, url CHAR)').then((data) => {
+        console.log(data)
+        var initurl = config.OG_RPC.HttpProvider
+        sqlite.execute('INSERT INTO conn VALUES (?,?)', [1, initurl])
+        return sqlite.query('SELECT * FROM conn where id = 1')
+        // return C.getNetInfo()
+      }).then((data) => {
+        console.log(data.data[0])
+        this.nowLinkTo = data.data[0].url
+        return C.getNetInfo()
+      }).then((data) => {
+        console.log(data)
+        if (data === 4001) {
+          this.netWork_GREEN = false
+          this.netWork_RED = true
+        } else {
+          this.network_status = data
+          this.netWork_GREEN = true
+          this.netWork_RED = false
+          this.loading = false
+        }
       }).then().catch((err) => {
         console.log(err)
         this.netWork_GREEN = false
         this.netWork_RED = true
       })
-      initPage()
     },
     components: { SystemInformation },
     methods: {
@@ -103,10 +142,24 @@
       networkStatus () {
         this.dialogVisible = true
       },
+      setConnetction () {
+        C.changeConn('http://' + this.connURL).then((data) => {
+          if (data.result === 'success') {
+            console.log(data.data)
+          }
+        })
+        this.dialogVisible2 = false
+        this.loading = true
+        this.$message({
+          message: 'Connection setup successful. Please restart client',
+          type: 'a',
+          showClose: false,
+          duration: 0
+        })
+      },
       goAccount () {
         this.$router.push({ path: '/account' })
         C.checkTxStatus()
-        // this.$router.push({ path: '/account', query: { id: s } })
       },
       goCreatAccount () {
         this.$router.push({ path: '/creatAccount' })
@@ -157,6 +210,10 @@
     position: absolute;
     top:5.3%;
     right:4.5%;
+  }
+
+  #networkStatusInfo{
+    word-wrap: break-word;
   }
 
   #logo {

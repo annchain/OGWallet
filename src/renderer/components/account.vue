@@ -39,8 +39,8 @@
         <el-button v-if="cardShow" type="success" @click="goCreatAccount"  icon="el-icon-plus" round>creat account</el-button>
         <el-button v-if="cardShow" type="success" @click="goImportAccount" icon="el-icon-download" round style="margin-top: 10px">Import account</el-button>
       </div>
-    <main>
-      <el-card  v-if="cardShow" id="box-card" :key="account.account_name" v-for="account in accountList" shadow="hover" @click="accountInfo(account)">
+    <main v-if="cardShow" v-loading="cardLoading">
+      <el-card id="box-card" :key="account.account_name" v-for="account in accountList" shadow="hover" @click="accountInfo(account)">
         <div slot="header" class="clearfix">
           <span  class="title alt">{{ account.account_name }}</span>
           <el-button style="float: right; padding: 3px 0" type="text" @click="accountInfo(account)">Info</el-button>
@@ -48,7 +48,7 @@
         <div class="title alt inCard">
           {{ account.address }}
         </div>
-        <div class="title alt">
+        <div class="title alt" style="margin-top: 18px">
           balance : {{ account.balance_OG }} OG
         </div>
       </el-card>
@@ -72,16 +72,16 @@
           <el-table :data="transactionData" height="100%">
             <el-table-column fixed prop="txHash" label="TRANCACTIONS" width="220">
             </el-table-column>
-            <el-table-column prop="cStatus" label="STATUS" width="75">
+            <el-table-column prop="cStatus" label="STATUS" width="85">
               <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper">
                     <el-tag size="medium">{{ scope.row.cStatus }}</el-tag>
                   </div>
               </template>
             </el-table-column>
-            <el-table-column prop="cFrom" label="FROM" width="215">
+            <el-table-column prop="cFrom" label="FROM" width="210">
             </el-table-column>
-            <el-table-column prop="cTo" label="TO" width="215">
+            <el-table-column prop="cTo" label="TO" width="210">
             </el-table-column>
             <el-table-column prop="ConfirmTime" label="TIMESTAMP" width="120">
             </el-table-column>
@@ -232,7 +232,7 @@
 
   #box-card{
     width: 284.67px;
-    height: 165px;
+    height: 180px;
     margin-top: 65px;
     margin-left: 10px;
     background-color: #f0f9eb;
@@ -303,6 +303,7 @@ export default {
       isRouterAlive: true,
       accountList: [],
       cardShow: true,
+      cardLoading: true,
       accountInfoShow: false,
       accountSelect: {},
       balance: 0,
@@ -338,7 +339,11 @@ export default {
       console.log(data)
       this.accountList = data.data
       console.log(this.accountList)
+      this.cardLoading = false
     })
+    // sqlite.query('SELECT * FROM conn').then((data) => {
+    //   console.log(data)
+    // })
   },
   methods: {
     goIndex () {
@@ -374,6 +379,7 @@ export default {
       }).then().catch(function (err) {
         console.log('accountInfo err:', err)
       })
+      C.checkTxStatus()
     },
     sinerConfirm (tx) {
       console.log('tx', tx)
