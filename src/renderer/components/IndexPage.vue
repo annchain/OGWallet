@@ -123,7 +123,7 @@
           this.netWork_GREEN = false
           this.netWork_RED = true
         } else {
-          this.network_status = data
+          this.network_status = data.data
           this.netWork_GREEN = true
           this.netWork_RED = false
           this.loading = false
@@ -132,6 +132,19 @@
         console.log(err)
         this.netWork_GREEN = false
         this.netWork_RED = true
+      })
+      sqlite.query('SELECT * FROM usr').then((data) => {
+        console.log(data)
+        for (var i = 0; i < data.data.length; i++) {
+          var account = data.data[i]
+          console.log(account)
+          C.getBalance(account.address).then((result) => {
+            console.log(result.data)
+            var sql = 'UPDATE usr SET balance_OG = ' + result.data.balance + ' where address = ' + '"' + result.data.address + '"'
+            console.log(sql)
+            sqlite.execute(sql)
+          })
+        }
       })
     },
     components: { SystemInformation },

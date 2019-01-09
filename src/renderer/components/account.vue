@@ -70,9 +70,9 @@
         </div>
         <div id="txTable">
           <el-table :data="transactionData" height="100%">
-            <el-table-column fixed prop="txHash" label="TRANCACTIONS" width="220">
+            <el-table-column fixed prop="txHash" label="TRANCACTIONS" width="210">
             </el-table-column>
-            <el-table-column prop="cStatus" label="STATUS" width="85">
+            <el-table-column prop="cStatus" label="STATUS" width="95">
               <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper">
                     <el-tag size="medium">{{ scope.row.cStatus }}</el-tag>
@@ -233,7 +233,7 @@
   #box-card{
     width: 284.67px;
     height: 180px;
-    margin-top: 65px;
+    margin-top: 75px;
     margin-left: 10px;
     background-color: #f0f9eb;
     /* margin-right: 5px; */
@@ -335,15 +335,29 @@ export default {
     }
   },
   created: function () {
+    // sqlite.query('SELECT * FROM usr').then((data) => {
+    //   console.log(data)
+    //   for (var i = 0; i < data.data.length; i++) {
+    //     var account = data.data[i]
+    //     console.log(account)
+    //     C.getBalance(account.address).then((result) => {
+    //       console.log(result.data)
+    //       var sql = 'UPDATE usr SET balance_OG = ' + result.data.balance + ' where address = ' + '"' + result.data.address + '"'
+    //       console.log(sql)
+    //       sqlite.execute(sql)
+    //     })
+    //   }
+    //   setTimeout(function () {
+    //     this.accountList = data.data
+    //     console.log(this.accountList)
+    //     this.cardLoading = false
+    //   }, 1000)
+    // })
     sqlite.query('SELECT * FROM usr').then((data) => {
-      console.log(data)
       this.accountList = data.data
       console.log(this.accountList)
       this.cardLoading = false
     })
-    // sqlite.query('SELECT * FROM conn').then((data) => {
-    //   console.log(data)
-    // })
   },
   methods: {
     goIndex () {
@@ -366,13 +380,13 @@ export default {
       this.accountInfoShow = true
       this.accountSelect = accountData
       console.log(this.accountSelect)
-      var sql = 'SELECT * from txHistory where cFrom == "' + this.accountSelect.address + '"'
+      var sql = 'SELECT * from txHistory where cFrom == "' + this.accountSelect.address + '" order by ConfirmTime desc'
       sqlite.query(sql).then((data) => {
         console.log('accountInfo here', data)
         this.transactionData = data.data
         return C.getBalance(this.accountSelect.address)
       }).then((data) => {
-        this.balance = data.balance
+        this.balance = data.data.balance
         var sql = 'UPDATE usr SET balance_OG = ' + this.balance + ' where address = ' + '"' + this.accountSelect.address + '"'
         console.log(sql)
         return sqlite.execute(sql)
@@ -406,7 +420,7 @@ export default {
         tx.pubKey = this.accountSelect.pubKey
         tx.pubKey_raw = this.accountSelect.pubKey_raw
         og.getNonce(tx.from).then((data) => {
-          tx.nonce = data.nonce + 1
+          tx.nonce = data.data + 1
           var txParams = C.getTxParams(tx.from, tx.to, tx.amount, tx.pubKey, tx.pubKey_raw, tx.nonce)
           // console.log('txParams', txParams)
           var signTarget = C.genRawTransaction(txParams)
@@ -419,24 +433,24 @@ export default {
         }).then((data) => {
           console.log(data)
           var result = JSON.parse(data.body)
-          if (result.error) {
+          if (result.message) {
             this.$notify.error({
               title: 'transaction failed!',
-              message: result.error
+              message: result.message
             })
           } else {
             this.$notify({
               title: 'transaction sended!',
-              message: result.hash,
+              message: result.data,
               type: 'success'
             })
             this.transactionFromShow = false
             this.enterPassShow = false
             // save transaction
             tx.status = 'pending'
-            C.saveTransaction(tx, result.hash)
+            C.saveTransaction(tx, result.data)
             // reload account page
-            var sql = 'SELECT * from txHistory where cFrom == "' + this.accountSelect.address + '"'
+            var sql = 'SELECT * from txHistory where cFrom == "' + this.accountSelect.address + '" order by ConfirmTime desc'
             sqlite.query(sql).then((data) => {
               this.transactionData = data.data
             })
@@ -489,14 +503,13 @@ export default {
           type: 'error'
         })
       } else {
-        var type = 'secp'
         var data = {
           name: this.accountSelect.account_name,
           address: this.accountSelect.address,
           secp_privKey: a,
           recoverPhrase: C.getRecoverPhrase(a)
         }
-        C.layoutPDF(type, data)
+        C.layoutPDF(data)
         this.$notify({
           message: 'Account has been successfully exported!',
           type: 'success',

@@ -32,8 +32,8 @@ var checkTxStatus = function (txHash) {
   console.log(txHash)
   og.confirm(txHash).then((data) => {
     console.log(txHash, data)
-    if (typeof data.confirm === 'boolean') {
-      if (data.confirm) {
+    if (typeof data.data === 'boolean') {
+      if (data.data) {
         var status = 'success'
       } else {
         // eslint-disable-next-line no-redeclare
@@ -161,41 +161,22 @@ C.updateTxStatus = function () {
   console.log('a')
 }
 
-C.layoutPDF = function (type, data) {
-  // eslint-disable-next-line eqeqeq
-  if (type === 'secp') {
-    var docDefinition = { content: [
+C.layoutPDF = function (data) {
+  var docDefinition = {
+    content: [
+      // { text: 'OG ACCOUNT BACKUP CARD', style: 'header', absolutePosition: { x: 225, y: 50 } }, '\n', '\n',
       { text: 'OG ACCOUNT BACKUP CARD', style: 'header' }, '\n', '\n',
       { text: 'OG account:', style: 'header' },
       data.name, '\n',
       { text: 'address:', style: 'header' },
       data.address, '\n',
+      { qr: data.address }, '\n',
       { text: 'privKey:', style: 'header' },
       data.secp_privKey, '\n',
       { text: 'recoverPhrase:', style: 'header' },
       data.recoverPhrase, '\n'
-    ] }
-  } else if (type === 'ed') {
-    console.log(type)
-  } else if (type === 'pair') {
-    // eslint-disable-next-line no-redeclare
-    var docDefinition = { content: [
-      { text: 'CHORUS WALLET ACCOUNT BACKUP CARD', style: 'header' }, '\n', '\n',
-      { text: 'CHOE account:', style: 'header' }, data.account_name, '\n',
-      { text: 'address:', style: 'header' },
-      data.address, '\n',
-      { text: 'privKey:', style: 'header' },
-      data.secp_privKey, '\n',
-      { text: 'recoverPhrase:', style: 'header' },
-      data.recoverPhrase, '\n', '\n',
-      { text: 'CHOP account:', style: 'header' }, '\n', '\n',
-      { text: 'pubKey:', style: 'header' },
-      data.pubKey, '\n',
-      { text: 'pubKey:', style: 'header' },
-      data.ed_privKey
-    ] }
+    ]
   }
-
   // eslint-disable-next-line new-cap
   return new promise(function (resolve, reject) {
     try {
