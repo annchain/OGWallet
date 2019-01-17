@@ -53,6 +53,9 @@
         <span class="title">
           Welcome to Ola! An annchain.og wallet.
         </span>
+        <div id="svgIndex">
+          
+        </div>
         <!-- <system-information></system-information> -->
       </div>
       <div class="right-side">
