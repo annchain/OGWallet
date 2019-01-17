@@ -146,7 +146,14 @@
               show-icon>
             </el-alert>
           </div>
+<<<<<<< HEAD
            <div id="line" align=center>
+=======
+          <div id="TxTime" style="text-align:center;margin-top: 10px;">
+            {{ txOBJ.ConfirmTime }}
+          </div>
+          <div id="line" align=center>
+>>>>>>> e769edab10670ac7150b77a33a0b4cceb4873e15
             <font color=#a9a9a9>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</font>
           </div>
           <div id="TxAmount">
@@ -165,6 +172,7 @@
           <div id="TxComment">
             <div class="title alt small" style="display:inline-block;">COMMENT:</div>
             <div class="title alt" style="display:inline-block;margin-left:18px;">
+<<<<<<< HEAD
               {{txOBJ.cComment}}</div>
           </div>
           <div id="line" align=center>
@@ -179,6 +187,26 @@
           </el-button>
           <!-- <span slot="footer" class="dialog-footer">
           </span> -->
+=======
+              {{ txOBJ.cComment }}
+            </div>
+          </div>
+        </div>
+        <div id="line" align=center>
+          <font color=#a9a9a9>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</font>
+        </div>
+        <div id="TxHashArea">
+          <div class="title alt small" style="display:inline-block;">TX HASH:</div>
+          <div class="title alt" style="display:inline-block;margin-left:28px;">
+            {{ txOBJ.txHash.substring(0,10) +'...'+ txOBJ.txHash.substring(10,20) }}
+          </div>
+        </div>
+        <el-button type="text" style="display:block;margin:auto;margin-top: 30px;">
+          Go to   og.scan   for more information
+        </el-button>
+        <!-- <span slot="footer" class="dialog-footer">
+        </span> -->
+>>>>>>> e769edab10670ac7150b77a33a0b4cceb4873e15
       </el-dialog>
       <div id="transactionForm">
         <!-- Form -->
@@ -358,7 +386,7 @@
   #TxStatus {
     width: 60%;
     margin-left:20%;
-    margin-top: 10px;
+    margin-top: 30px;
   }
 
   #TxAmount{
