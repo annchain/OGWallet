@@ -58,10 +58,21 @@ C.changeConn = function (url) {
 }
 
 C.getNetInfo = function () {
-  return og.net_info()
+  // eslint-disable-next-line new-cap
+  return new promise(function (resolve, reject) {
+    og.net_info().then((data) => {
+      console.log(data)
+      if (data.data) {
+        resolve(data)
+      // eslint-disable-next-line no-undef
+      }
+    }).then().catch((err) => {
+      reject(err)
+    })
+  })
 }
 
-C.creatAccount = function () {
+C.createAccount = function () {
   return og.newAccount()
 }
 
@@ -98,7 +109,16 @@ C.deleteAccount = function (address) {
   return db.execute('DELETE FROM usr WHERE address == "' + address + '"')
 }
 
+C.getNonce = function (address) {
+  return og.getNonce(address)
+}
+
+C.sendTransaction = function (tx) {
+  return og.sendTransaction(tx)
+}
+
 C.checkAddress = function (address) {
+  console.log(address)
   var checkPoint = '0x'
   if (address.slice(0, 2) === checkPoint && address.length === 42) {
     return true
@@ -108,27 +128,27 @@ C.checkAddress = function (address) {
 }
 
 C.encryptPrivKey = function (password, decpri) {
-  password = password || 'abcdefg'
-  var key = CryptoJS.enc.Utf8.parse(password)
-  var srcs = CryptoJS.enc.Utf8.parse(decpri)
-  var encrypted = CryptoJS.AES.encrypt(srcs, key, {mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7})
-  return encrypted.toString()
+  // password = password || 'abcdefg'
+  // var key = CryptoJS.enc.Utf8.parse(password)
+  // var srcs = CryptoJS.enc.Utf8.parse(decpri)
+  // var encrypted = CryptoJS.AES.encrypt(srcs, key, {mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7})
+  var a = CryptoJS.AES.encrypt(decpri, password, {mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7})
+  return a.toString()
 }
 
 C.decryptPrivKey = function (password, encpri) {
-  var key = CryptoJS.enc.Utf8.parse(password)
-  var decrypt = CryptoJS.AES.decrypt(encpri, key, {mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7})
-  return CryptoJS.enc.Utf8.stringify(decrypt).toString()
-}
-
-C.getNonce = function (address) {
-  og.getNonce(address).then(function (data) {
-    return data
-  })
+  // var key = CryptoJS.enc.Utf8.parse(password)
+  // var decrypt = CryptoJS.AES.decrypt(encpri, key, {mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7})
+  var decpri = CryptoJS.AES.decrypt(encpri, password, {mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7}).toString(CryptoJS.enc.Utf8)
+  return decpri
 }
 
 C.saveTransaction = function (tx, hash) {
-  var time = new Date().toString()
+  // var time = new Date().toString()
+  var timestamp = Date.parse(new Date())
+  var newDate = new Date()
+  newDate.setTime(timestamp)
+  var time = newDate.toLocaleString('chinese', { hour12: false })
   return db.execute('INSERT INTO txHistory VALUES (?,?,?,?,?,?)', [hash, tx.status, tx.from, tx.to, tx.amount, time])
 }
 
@@ -157,8 +177,15 @@ C.makeUpTransaction = function (txParams, signature) {
   return og.makeUpTransaction(txParams, signature)
 }
 
-C.updateTxStatus = function () {
-  console.log('a')
+C.randArr = function (arr) {
+  var len = arr.length
+  for (var i = len - 1; i >= 0; i--) {
+    var randomIndex = Math.floor(Math.random() * (i + 1))
+    var itemIndex = arr[randomIndex]
+    arr[randomIndex] = arr[i]
+    arr[i] = itemIndex
+  }
+  return arr
 }
 
 C.layoutPDF = function (data) {

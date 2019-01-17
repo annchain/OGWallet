@@ -1,5 +1,6 @@
 <template >
-  <div id="wrapper" v-loading="loading">
+  <div id="wrapper">
+  <!-- <div id="wrapper" v-loading="loading" element-loading-text="please check your connection" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)"> -->
     <img id="logo" src="~@/assets/ann.png" alt="electron-vue">
     <!-- <img id="logo" src="~@/assets/logo.png" alt="electron-vue"> -->
     <main v-if="isRouterAlive">
@@ -60,7 +61,7 @@
           <p>
             Ola 1.11 Beta is here: a faster, simple OG client. This huge update to OG allows you to create encrypted contracts and transactions on-chain. 
           </p>
-          <el-button type="success" @click="goCreatAccount"  icon="el-icon-plus" round style="margin-top: 10px">creat account</el-button>
+          <el-button type="success" @click="goCreatAccount"  icon="el-icon-plus" round style="margin-top: 10px">create account</el-button>
           <el-button type="success" @click="goImportAccount" icon="el-icon-download" round style="margin-top: 10px">Import account</el-button>
         </div>
         <div class="doc" style="margin-top: 15%">
@@ -129,9 +130,12 @@
           this.loading = false
         }
       }).then().catch((err) => {
-        console.log(err)
+        console.log('err', err)
         this.netWork_GREEN = false
         this.netWork_RED = true
+      })
+      sqlite.execute('CREATE TABLE IF NOT EXISTS contract (address CHAR PRIMARY KEY UNIQUE, name CHAR, abi CHAR, timeStamp CHAR)').then((data) => {
+        console.log(data)
       })
       sqlite.query('SELECT * FROM usr').then((data) => {
         console.log(data)
@@ -175,7 +179,7 @@
         C.checkTxStatus()
       },
       goCreatAccount () {
-        this.$router.push({ path: '/creatAccount' })
+        this.$router.push({ path: '/createAccount' })
       },
       goImportAccount () {
         this.$router.push({ path: '/importAccount' })
@@ -202,12 +206,13 @@
   body { font-family: 'Source Sans Pro', sans-serif; }
 
   #wrapper {
-    background:
+    /* background:
       radial-gradient(
         ellipse at top left,
         rgba(255, 255, 255, 1) 40%,
         rgba(229, 229, 229, .9) 100%
-      );
+      ); */
+    background-image: url("~@/assets/background.png"); 
     height: 100vh;
     padding: 60px 80px;
     width: 100vw;
