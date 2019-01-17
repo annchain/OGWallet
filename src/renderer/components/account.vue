@@ -106,7 +106,8 @@
       <el-dialog
         :show-close=false
         :visible.sync="showTxDetail"
-        width="45%"
+        width="40%"
+        top="4.5%"
         :before-close="handleClose">
         <div id="TxDetail">
           <div id="svgImg">
@@ -146,33 +147,46 @@
               show-icon>
             </el-alert>
           </div>
-           <div id="line" align=center>
-            <font color=#a9a9a9>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</font>
+          <div id="TxTime" style="text-align:center;margin-top: 10px;">
+            {{ txOBJ.ConfirmTime }}
+          </div>
+          <div id="line" align=center>
+            <font color=#a9a9a9>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</font>
           </div>
           <div id="TxAmount">
             <div class="title alt small" style="display:inline-block;">AMOUNT:</div>
-            <div class="title alt" style="display:inline-block;margin-left:10px;">{{txOBJ.cAmount}}</div>
+            <div class="title alt" style="display:inline-block;margin-left:26px;">{{txOBJ.cAmount}}</div>
             <div class="title alt" style="display:inline-block;margin-left:10px;">OG</div>
           </div>
           <div id="TxTo">
             <div class="title alt small" style="display:inline-block;">TO:</div>
-            <div class="title alt" style="display:inline-block;margin-left:48px;">{{txOBJ.cTo}}</div>
+            <div class="title alt" style="display:inline-block;margin-left:63px;">{{txOBJ.cTo}}</div>
           </div>
           <div id="TxFrom">
             <div class="title alt small" style="display:inline-block;">FROM:</div>
-            <div class="title alt" style="display:inline-block;margin-left:28px;">{{txOBJ.cFrom}}</div>
+            <div class="title alt" style="display:inline-block;margin-left:45px;">{{txOBJ.cFrom}}</div>
           </div>
           <div id="TxComment">
             <div class="title alt small" style="display:inline-block;">COMMENT:</div>
-            <div class="title alt" style="display:inline-block;margin-left:28px;">
-              {{txOBJ.cComment}}</div>
+            <div class="title alt" style="display:inline-block;margin-left:18px;">
+              {{ txOBJ.cComment }}
+            </div>
           </div>
         </div>
         <div id="line" align=center>
-          <font color=#a9a9a9>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</font>
+          <font color=#a9a9a9>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</font>
         </div>
-        <span slot="footer" class="dialog-footer">
-        </span>
+        <div id="TxHashArea">
+          <div class="title alt small" style="display:inline-block;">TX HASH:</div>
+          <div class="title alt" style="display:inline-block;margin-left:28px;">
+            {{ txOBJ.txHash.substring(0,10) +'...'+ txOBJ.txHash.substring(10,20) }}
+          </div>
+        </div>
+        <el-button type="text" style="display:block;margin:auto;margin-top: 30px;">
+          Go to   og.scan   for more information
+        </el-button>
+        <!-- <span slot="footer" class="dialog-footer">
+        </span> -->
       </el-dialog>
       <div id="transactionForm">
         <!-- Form -->
@@ -352,7 +366,7 @@
   #TxStatus {
     width: 60%;
     margin-left:20%;
-    margin-top: 10px;
+    margin-top: 30px;
   }
 
   #TxAmount{
