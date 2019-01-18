@@ -28,6 +28,13 @@ db.query('SELECT * from txHistory where cStatus == "pending"').then((data) => {
   }
 })
 
+db.query('SELECT * from txHistory where cStatus == "failed"').then((data) => {
+  console.log(data)
+  for (var i = 0; i < data.data.length; i++) {
+    checkTxStatus(data.data[i].txHash)
+  }
+})
+
 var checkTxStatus = function (txHash) {
   console.log(txHash)
   og.confirm(txHash).then((data) => {
@@ -78,6 +85,12 @@ C.createAccount = function () {
 
 C.checkTxStatus = function () {
   db.query('SELECT * from txHistory where cStatus == "pending"').then((data) => {
+    console.log(data)
+    for (var i = 0; i < data.data.length; i++) {
+      checkTxStatus(data.data[i].txHash)
+    }
+  })
+  db.query('SELECT * from txHistory where cStatus == "failed"').then((data) => {
     console.log(data)
     for (var i = 0; i < data.data.length; i++) {
       checkTxStatus(data.data[i].txHash)

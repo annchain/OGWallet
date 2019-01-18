@@ -51,7 +51,8 @@ function createWindow () {
     useContentSize: true,
     width: 1400,
     titleBarStyle: 'hiddenInset',
-    show: false
+    show: false,
+    backgroundColor: '#cdece6'
   })
 
   mainWindow.loadURL(winURL)

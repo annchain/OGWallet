@@ -89,11 +89,11 @@
         </div>
         <div class="doc" v-show="!docShow">
           <div class="title" style="text-align:center;margin-top: 8%">Account List</div>
-            <el-carousel :interval="4000" type="card" height="200px" indicator-position="none">
+            <el-carousel :interval="10000" type="card" height="200px" indicator-position="none">
               <el-carousel-item :key="account.account_name" v-for="account in accountList" @click.native="goAccount()">
                 <div style="z-index:-1">
-                  <vue-avatar :username="account.account_name" style="margin-top: 34px;margin-left: 15px;zoom:0.68"></vue-avatar>
-                  <p class="title" style="margin-top: 15px;margin-left: 15px">{{ account.account_name }}</p>
+                  <vue-avatar :username="account.account_name" style="margin-top: 34px;margin-left: 15px;zoom:0.82"></vue-avatar>
+                  <p class="title alt" style="margin-top: 15px;margin-left: 15px">{{ account.account_name }}</p>
                   <!-- <p class="title alt small" style="margin-top: 25px;margin-left: 15px">{{ account.address }}</p> -->
                   <p class="title alt" style="display:inline-block;margin-top: 19px;margin-left: 15px">balance: </p>
                   <p class="title alt" style="display:inline-block;margin-top: 19px;margin-left: 15px; font-size:28px">{{ account.balance_OG }}</p>
@@ -108,8 +108,8 @@
         <div class="doc" style="margin-top: 8%;">
           <div class="title alt" style="text-align:center;">Other Documentation</div>
           <div style="text-align:center">
-            <el-button type="success" icon="icon iconfont icon-wangzhan" plain @click="open('http://www.annchain.io/' )" style="margin-top: 5%"> website</el-button>
-            <el-button type="success" icon="icon iconfont icon-github1" plain @click="open('https://github.com/annchain/OG')" style="margin-top: 5%"> github</el-button>
+            <el-button type="success" icon="icon iconfont icon-wangzhan" plain @click="open('http://www.annchain.io/' )" style="margin-top: 3%;zoom: 1.25;"> website</el-button>
+            <el-button type="success" icon="icon iconfont icon-github1" plain @click="open('https://github.com/annchain/OG')" style="margin-top: 3%;zoom: 1.25;"> github</el-button>
           </div>
         </div>
       </div>
@@ -307,6 +307,7 @@
     color: #2c3e51;
     font-weight: bold;
     font-family:"Arial";
+    zoom: 1.25;
   }
 
   #backgroundSVG{
@@ -395,11 +396,11 @@
   
   .el-carousel__item:nth-child(2n) {
     /* background-color: transparent; */
-    background-color: #d4f3ec;
+    background-color: #d8f0ea;
   }
   
   .el-carousel__item:nth-child(2n+1) {
     /* background-color: transparent; */
-  background-color: #d8f0ea;
+  background-color: #d4f3ec;
   }
 </style>
