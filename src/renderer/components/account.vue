@@ -146,12 +146,15 @@
               show-icon>
             </el-alert>
           </div>
+          <div id="TxTime" style="text-align:center;margin-top: 10px;">
+            {{ txOBJ.ConfirmTime }}
+          </div>
            <div id="line" align=center>
             <font color=#a9a9a9>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</font>
           </div>
           <div id="TxAmount">
             <div class="title alt small" style="display:inline-block;">AMOUNT:</div>
-            <div class="title alt" style="display:inline-block;margin-left:26px;">{{txOBJ.cAmount}}</div>
+            <div class="title alt" style="display:inline-block;margin-left:26px;font-size:28px">{{txOBJ.cAmount}}</div>
             <div class="title alt" style="display:inline-block;margin-left:10px;">OG</div>
           </div>
           <div id="TxTo">
@@ -358,7 +361,7 @@
   #TxStatus {
     width: 60%;
     margin-left:20%;
-    margin-top: 10px;
+    margin-top: 30px;
   }
 
   #TxAmount{
