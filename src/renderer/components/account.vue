@@ -68,18 +68,51 @@
               <span class="title alt" style="margin-left: 10px;">{{ accountSelect.account_name }}</span>
             </div>
             <div class="title alt inCard" style="margin-top: 10px;">
+              <el-button id="copyIcon" type="text" icon="el-icon-news" style="margin-right: 4px;color:#2d3e50;font-size:16px" @click="oneKeyCopy(accountSelect.address)"></el-button>
               {{accountSelect.address}}
             </div>
-            <el-button type="success" icon="icon iconfont icon-qian2" round size="middle" disabled plain style="margin-top: 10px;"> BALANCE: {{balance}}</el-button>
-            <div >
+            <div id="accBalance">
+              <div class="title alt" style="display:inline-block;">BALANCE:</div>
+              <div class="title alt" style="display:inline-block;margin-left:26px;font-size:28px;color: #20a8ff">{{balance}}</div>
+              <div class="title alt" style="display:inline-block;margin-left:10px;">OG</div>
+            </div>
+            <div>
               <canvas id="qrcode" style="margin-top: 10px;"></canvas>
             </div>
           </div>  
           <div id="txTable">
-            <el-table :data="transactionData" height="100%" style="background-color: transparent; " 
-            :row-style="tableRowStyle"
-            :header-cell-style="tableHeaderColor"
-            empty-text="empty">
+            <el-card id="box-card" :key="tx.txHash" v-for="tx in transactionData" @click.native="txDetail(tx.txHash)" shadow="hover">
+              <div id="fromInfo" style="margin-left: 100px;margin-top: 20px;display: inline-block;">
+                <vue-avatar :username="accountSelect.account_name" style="margin-left: 75px;"></vue-avatar>
+                <div class="title alt" style="margin-left: 65px;margin-top: 5px;">{{ accountSelect.account_name }}</div>
+                <div class="title alt" style="margin-left: 10px;">{{ tx.cFrom.substring(0,10) }} ... {{ tx.cFrom.substring(32) }}</div>
+              </div>
+              <div id="toImg" style="position: absolute;display: inline-block;font-size: 30px;margin-top: 30px;margin-left: 100px;">
+                <div class="title alt" style="margin-left: -70px;">{{tx.txHash.substring(0,10)}}...{{tx.txHash.substring(56)}}</div>
+                <div style="margin-left: -10px;">·····></div>
+                <div style="display: inline-block;margin-left: -10px;font-size: 18px;margin-top: -20px;color: #20a8ff">{{tx.cAmount}}</div>
+                <div style="display: inline-block;font-size: 18px;margin-top: -20px;">OG</div>
+                <div style="margin-top: -155px;margin-left: -410px;">
+                  <div v-if="tx.cStatus == 'success'" style="">
+                    <el-tag type="success" >success</el-tag>
+                  </div>
+                  <div v-if="tx.cStatus == 'tx not found'" style="">
+                    <el-tag type="warning" >transaction not found</el-tag>
+                  </div>
+                  <div v-if="tx.cStatus == 'failed'" style="">
+                    <el-tag type="danger" >failed</el-tag>
+                  </div>
+                  <div v-if="tx.cStatus == 'pending'" style="">
+                    <el-tag >pending</el-tag>
+                  </div>
+                </div>
+              </div>
+              <div id="toInfo" style="margin-top: 20px;display:inline-block;margin-left: 250px;">
+                <vue-avatar :username="tx.cTo.substring(3,random())" style="margin-left: 75px; "></vue-avatar>
+                <div class="title alt" style="margin-left: 65px;margin-top: 5px;">{{ tx.cTo.substring(3,10) }}</div>
+                <div class="title alt" style="margin-left: 10px;">{{ tx.cTo.substring(0,10) }} ... {{ tx.cTo.substring(32) }}</div>
+              </div>
+            </el-card>
               <el-table-column fixed prop="txHash" label="TRANCACTIONS" width="210" sortable style="color:#2d3e50" :show-overflow-tooltip="false">
                 <template slot-scope="scope">
                   <el-button type="text" @click="txDetail(scope.row.txHash)">{{ scope.row.txHash.substring(0,10)+'...'+scope.row.txHash.substring(56) }}</el-button>
@@ -103,7 +136,7 @@
               </el-table-column>
               <el-table-column prop="cAmount" label="AMOUNT (OG)" width="79" sortable :show-overflow-tooltip="false">
               </el-table-column>
-            </el-table>
+            </el-table> -->
           </div>
         </div>
       </transition>
@@ -159,16 +192,18 @@
           </div>
           <div id="TxAmount">
             <div class="title alt small" style="display:inline-block;">AMOUNT:</div>
-            <div class="title alt" style="display:inline-block;margin-left:26px;font-size:28px">{{txOBJ.cAmount}}</div>
+            <div class="title alt" style="display:inline-block;margin-left:26px;font-size:28px;color: #20a8ff">{{txOBJ.cAmount}}</div>
             <div class="title alt" style="display:inline-block;margin-left:10px;">OG</div>
           </div>
           <div id="TxTo">
             <div class="title alt small" style="display:inline-block;">TO:</div>
-            <div class="title alt" style="display:inline-block;margin-left:63px;">{{txOBJ.cTo}}</div>
+            <el-button id="copyIcon" type="text" icon="el-icon-news" style="margin-left: 45px;color:#2d3e50;font-size:16px" @click="oneKeyCopy(txOBJ.cTo)"></el-button>
+            <div class="title alt" style="display:inline-block;margin-left:4px;">{{txOBJ.cTo}}</div>
           </div>
           <div id="TxFrom">
             <div class="title alt small" style="display:inline-block;">FROM:</div>
-            <div class="title alt" style="display:inline-block;margin-left:45px;">{{txOBJ.cFrom}}</div>
+            <el-button id="copyIcon" type="text" icon="el-icon-news" style="margin-left: 26px;color:#2d3e50;font-size:16px" @click="oneKeyCopy(txOBJ.cFrom)"></el-button>
+            <div class="title alt" style="display:inline-block;margin-left:4px;">{{txOBJ.cFrom}}</div>
           </div>
           <div id="TxComment">
             <div class="title alt small" style="display:inline-block;">COMMENT:</div>
@@ -180,7 +215,8 @@
           </div>
           <div id="TxHashArea">
             <div class="title alt small" style="display:inline-block;">TX HASH:</div>
-            <div class="title alt" style="display:inline-block;margin-left:28px;">{{txOBJ.txHashFrage01}}...{{txOBJ.txHashFrage02}}</div>
+            <el-button id="copyIcon" type="text" icon="el-icon-news" style="margin-left: 14px;color:#2d3e50;font-size:16px" @click="oneKeyCopy(txOBJ.txHash)"></el-button>
+            <div class="title alt" style="display:inline-block;margin-left:4px;">{{txOBJ.txHashFrage01}}...{{txOBJ.txHashFrage02}}</div>
           </div>
           <canvas id="hashQrcode" style="display:inline-block;zoom:0.6;margin-left:75%;"></canvas>
           <el-button type="text" style="display:block;margin:auto;margin-top: 10px;">
@@ -211,11 +247,20 @@
             <el-button type="success" @click="toEnterPass" icon="el-icon-check"> Send</el-button>
           </div>
           <el-dialog width="60%" title="SIGNER" :visible.sync="enterPassShow" append-to-body>
-            <div class="title alt inCard" style="margin-top: 10px;">
-              {{accountSelect.address}}
+            <div style="margin-left: 90px;">
+              <vue-avatar :username="accountSelect.account_name" style="margin-left: 10px;"></vue-avatar>
+              <div class="title alt inCard" style="margin-top: 10px;">
+                {{accountSelect.account_name}}
+              </div>
             </div>
-            <div class="title alt inCard" style="margin-top: 10px;margin-left: 50px;">
-              will transfer   {{tx.amount}}{{selectValue}}   to
+            <div class="title alt inCard" style="margin-top: 10px;margin-left: 50px;display: inline-block;">
+              will transfer
+            </div>
+            <div class="title alt inCard" style="margin-top: 10px;margin-left: 10px;display: inline-block;color: red;font-size: 28px">
+              {{tx.amount}}{{selectValue}}
+            </div>
+            <div class="title alt inCard" style="margin-top: 10px;margin-left: 10px;display: inline-block;">
+              to
             </div>
             <div class="title alt inCard" style="margin-top: 10px;">
               {{tx.to}}
@@ -344,6 +389,23 @@
   }
   #cards::-webkit-scrollbar {display:none}
 
+  #txTable{
+    position: absolute;
+    right: 40px;
+    top: 240px;
+    width: 66%;
+    height: 52%;
+    margin-left:10px;
+    background-color: transparent;
+    overflow-y: auto;
+    /* display: flex; */
+    /* flex-flow: row wrap; */
+    /* align-content: flex-start; */
+    /* overflow: hidden; */
+  }
+  #txTable::-webkit-scrollbar {display:none}
+
+
   #walletSVG{
     
   }
@@ -418,17 +480,6 @@
     bottom: 30px;
   }
 
-  #txTable{
-    position: absolute;
-    right: 40px;
-    top: 240px;
-    width: 66%;
-    height: 52%;
-    margin-left:10px;
-    background-color: transparent;
-    overflow: hidden;
-  }
-
   #svgImg {
     text-align:center;
   }
@@ -449,6 +500,7 @@ import C from '../js/common.js'
 import sqlite from '../db/db.js'
 import QRCode from 'qrcode'
 import VueAvatar from '@lossendae/vue-avatar'
+import copy from 'copy-to-clipboard'
 
 export default {
   name: 'account-page',
@@ -515,6 +567,16 @@ export default {
         return 'background: #e4f5f2; color:#2d3e50;'
       }
     },
+    oneKeyCopy (data) {
+      copy(data)
+      this.$message({
+        message: '"' + data + '" copied to clipboard.',
+        type: 'success'
+      })
+    },
+    random () {
+      return Math.ceil(Math.random() * 10)
+    },
     goIndex () {
       this.$router.push({ path: '/' })
     },
@@ -564,14 +626,20 @@ export default {
       sqlite.query(sql).then((data) => {
         console.log('txHistory', data.data)
         this.transactionData = data.data
-        return C.getBalance(this.accountSelect.address)
+        var sql = 'SELECT * FROM usr WHERE address == "' + this.accountSelect.address + '"'
+        return sqlite.query(sql)
+      }).then((data) => {
+        console.log(data.data)
+        this.balance = data.data[0].balance_OG
+        console.log(this.balance)
+        return C.getBalance(data.data[0].address)
       }).then((data) => {
         this.balance = data.data.balance
         var sql = 'UPDATE usr SET balance_OG = ' + this.balance + ' where address = ' + '"' + this.accountSelect.address + '"'
         console.log(sql)
         return sqlite.execute(sql)
-      }).then().catch(function (err) {
-        console.log('accountInfo err:', err)
+      }).then().catch((err) => {
+        console.log(err)
       })
       this.reflashTable()
     },
