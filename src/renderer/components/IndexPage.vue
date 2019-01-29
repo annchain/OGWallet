@@ -226,7 +226,7 @@
             this.indexPageLoading = true
             this.dialogVisible2 = false
             this.$message({
-              message: 'Connection setup successful. Please restart client',
+              message: 'Connection setup successful. Please restart the client.',
               type: 'a',
               showClose: false,
               duration: 0

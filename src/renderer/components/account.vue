@@ -136,7 +136,7 @@
               </el-table-column>
               <el-table-column prop="cAmount" label="AMOUNT (OG)" width="79" sortable :show-overflow-tooltip="false">
               </el-table-column>
-            </el-table> -->
+            </el-table>
           </div>
         </div>
       </transition>
@@ -392,9 +392,9 @@
   #txTable{
     position: absolute;
     right: 40px;
-    top: 240px;
+    top: 220px;
     width: 66%;
-    height: 52%;
+    height: 57%;
     margin-left:10px;
     background-color: transparent;
     overflow-y: auto;
