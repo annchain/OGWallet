@@ -83,6 +83,15 @@ C.createAccount = function () {
   return og.newAccount()
 }
 
+C.createAccount_useBip39 = function () {
+  var mnemonic = bip39.generateMnemonic()
+  var entropy = bip39.mnemonicToEntropy(mnemonic)
+  var privateKey = entropy + entropy
+  var newAccount = og.recoveryAccount(privateKey)
+  newAccount.recoverPhrase = mnemonic
+  return newAccount
+}
+
 C.checkTxStatus = function () {
   db.query('SELECT * from txHistory where cStatus == "pending"').then((data) => {
     console.log(data)
@@ -103,7 +112,12 @@ C.getBalance = function (addr) {
 }
 
 C.getRecoverPhrase = function (data) {
-  return bip39.entropyToMnemonic(data)
+  console.log(bip39.entropyToMnemonic(data))
+  return bip39.entropyToMnemonic(data) // 24
+}
+
+C.generateRecoverPhase = function () {
+  return bip39.generateMnemonic() // 12
 }
 
 C.recoverPrivate = function (data) {
@@ -211,8 +225,8 @@ C.layoutPDF = function (data) {
       { text: 'address:', style: 'header' },
       data.address, '\n',
       { qr: data.address }, '\n',
-      { text: 'privKey:', style: 'header' },
-      data.secp_privKey, '\n',
+      // { text: 'privKey:', style: 'header' },
+      // data.secp_privKey, '\n',
       { text: 'recoverPhrase:', style: 'header' },
       data.recoverPhrase, '\n'
     ]

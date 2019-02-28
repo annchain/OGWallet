@@ -22,6 +22,7 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js"
   },
   "dependencies": {
+    "@download/blockies": "^1.0.3",
     "@lossendae/vue-avatar": "^0.1.5",
     "aes-js": "^3.1.2",
     "assert": "^1.4.1",
@@ -35,6 +36,7 @@
     "electron-packager": "^13.0.1",
     "electron-prebuilt": "^1.4.13",
     "element-ui": "^2.4.11",
+    "ethereum-blockies-base64": "^1.0.2",
     "fs": "0.0.1-security",
     "install": "^0.12.2",
     "keccak": "^2.0.0",

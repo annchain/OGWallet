@@ -22,7 +22,9 @@ function createWindow () {
         label: 'Application',
         submenu: [
           // eslint-disable-next-line standard/object-curly-even-spacing
-          { label: 'Quit', accelerator: 'Command+Q', click: function () { app.quit() }}
+          { label: 'Quit', accelerator: 'Command+Q', click: function () { app.quit() }},
+          // eslint-disable-next-line standard/object-curly-even-spacing
+          { label: 'relaunch', accelerator: 'Command+R', click: function () { app.relaunch() }}
         ]
       },
       {
@@ -47,8 +49,8 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 750,
     useContentSize: true,
+    height: 750,
     width: 1400,
     titleBarStyle: 'hiddenInset',
     show: false,

@@ -43,7 +43,8 @@
       </div>
       <div id="step2" v-show="create_page == 1">
         <p class="title alt small">account</p>
-        <vue-avatar :username="newAccount.account_name || tag"></vue-avatar>
+        <!-- <vue-avatar :username="newAccount.account_name || tag"></vue-avatar> -->
+        <img id="address-identicon" v-bind:src="newAccountOBJ.identicon">
         <p class="title alt">{{newAccount.account_name}}</p>
         <p class="title alt small">address</p>
         <p class="title alt">{{newAccountOBJ.address}}</p>
@@ -147,11 +148,13 @@
 import C from '../js/common.js'
 import QRCode from 'qrcode'
 import VueAvatar from '@lossendae/vue-avatar'
+import { createIcon } from '@download/blockies'
 
 export default {
   name: 'account-page',
   components: {
     QRCode: QRCode,
+    createIcon: createIcon,
     VueAvatar
   },
   data () {
@@ -184,14 +187,21 @@ export default {
         if (this.newAccount.account_name && this.newAccount.password && this.newAccount.password_repeat) {
           if (this.newAccount.password.length > 7) {
             if (this.newAccount.password === this.newAccount.password_repeat) {
-              this.newAccountOBJ = C.createAccount()
-              this.newAccountOBJ.recoverPhrase = C.getRecoverPhrase(this.newAccountOBJ.privateKey)
+              this.newAccountOBJ = C.createAccount_useBip39()
+              // this.newAccountOBJ.recoverPhrase = C.getRecoverPhrase(this.newAccountOBJ.privateKey)
               this.newAccountOBJ.recoverPhraseArr = this.newAccountOBJ.recoverPhrase.split(' ')
               this.phraseArr = this.newAccountOBJ.recoverPhraseArr
+              console.log(this.newAccountOBJ.privateKey)
+              console.log(this.newAccountOBJ)
               console.log(this.phraseArr)
               this.newAccountOBJ.privateKey = C.encryptPrivKey(this.newAccount.password, this.newAccountOBJ.privateKey)
               this.showLoading = true
               this.stepPageLoading = true
+              this.newAccountOBJ.identicon = createIcon({ // All options are optional
+                seed: this.newAccountOBJ.address, // seed used to generate icon data, default: random
+                size: 10, // width/height of the icon in blocks, default: 10
+                scale: 8 // width/height of each block in pixels, default: 5
+              }).toDataURL()
               setTimeout(() => {
                 this.create_page += 1
                 this.stepPageLoading = false
@@ -228,7 +238,7 @@ export default {
       } else if (this.create_page === 2) {
         var ownerTypeInPhrase = this.ownerTypeInPhrase.toString().replace(/,/g, ' ')
         console.log(ownerTypeInPhrase)
-        // console.log('here', this.newAccountOBJ.recoverPhraseArr)
+        console.log('here', this.newAccountOBJ.recoverPhraseArr)
         if (ownerTypeInPhrase === this.newAccountOBJ.recoverPhrase) {
         // if (this.inputPhrase === '1') {
           this.$message({
@@ -259,7 +269,7 @@ export default {
       var indexOfPhrase = this.phraseArr.indexOf(phrase)
       this.phraseArr.splice(indexOfPhrase, 1)
       this.ownerTypeInPhrase.push(phrase)
-      if (this.ownerTypeInPhrase.length === 24) {
+      if (this.ownerTypeInPhrase.length === 12) {
         this.confirmDisabled = false
       }
       console.log(this.ownerTypeInPhrase.toString())

@@ -92,7 +92,8 @@
             <el-carousel :interval="10000" type="card" height="200px" indicator-position="none">
               <el-carousel-item :key="account.account_name" v-for="account in accountList" @click.native="goAccount()">
                 <div style="z-index:-1">
-                  <vue-avatar :username="account.account_name" style="margin-top: 34px;margin-left: 15px;zoom:0.82"></vue-avatar>
+                  <!-- <vue-avatar :username="account.account_name" style="margin-top: 34px;margin-left: 15px;zoom:0.82"></vue-avatar> -->
+                  <img id="address-identicon-index" v-bind:src="account.identicon">
                   <p class="title alt" style="margin-top: 15px;margin-left: 15px">{{ account.account_name }}</p>
                   <!-- <p class="title alt small" style="margin-top: 25px;margin-left: 15px">{{ account.address }}</p> -->
                   <p class="title alt" style="display:inline-block;margin-top: 19px;margin-left: 15px">balance: </p>
@@ -126,6 +127,7 @@
   import sqlite from '../db/db.js'
   import config from '../config/config.js'
   import VueAvatar from '@lossendae/vue-avatar'
+  import { createIcon } from '@download/blockies'
 
   export default {
     name: 'index-page',
@@ -192,6 +194,15 @@
       sqlite.query('SELECT * FROM usr').then((data) => {
         console.log(data)
         this.accountList = data.data
+        for (var j = 0; j < this.accountList.length; j++) {
+          var seed = this.accountList[j].address
+          this.accountList[j].identicon = createIcon({ // All options are optional
+            seed, // seed used to generate icon data, default: random
+            size: 10, // width/height of the icon in blocks, default: 10
+            scale: 8 // width/height of each block in pixels, default: 5
+          }).toDataURL()
+        }
+        console.log(this.accountList)
         if (data.data.length === 0) {
           this.docShow = true
         } else {
@@ -315,6 +326,19 @@
     margin-top: -125px;
     margin-left: 25%;
     opacity: 0.25;
+  }
+
+  #address-identicon-index{
+    width: 50px;
+    height: 50px;
+    /* display: flex; */
+    border-radius: 50% !important;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    display: inline-block;
+    margin-top: 10px;
+    margin-left: 10px;
   }
 
   main {

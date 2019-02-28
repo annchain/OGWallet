@@ -38,7 +38,8 @@
       </div>
       <div id="step2" v-show="import_page == 1">
         <p class="title alt small">account</p>
-        <vue-avatar :username="ImpAccount.account_name"></vue-avatar>
+        <!-- <vue-avatar :username="ImpAccount.account_name"></vue-avatar> -->
+        <img id="address-identicon" v-bind:src="restoreAccountOBJ.identicon">
         <p class="title alt">{{ImpAccount.account_name}}</p>
         <p class="title alt small">address</p>
         <p class="title alt">{{restoreAccountOBJ.address}}</p>
@@ -136,11 +137,13 @@
 import C from '../js/common.js'
 import QRCode from 'qrcode'
 import VueAvatar from '@lossendae/vue-avatar'
+import { createIcon } from '@download/blockies'
 
 export default {
   name: 'account-page',
   components: {
     QRCode: QRCode,
+    createIcon: createIcon,
     VueAvatar
   },
   data () {
@@ -170,8 +173,13 @@ export default {
         if (this.ImpAccount.password === this.ImpAccount.password_repeat) {
           if (this.ImpAccount.password.length > 7) {
             if (this.importMode === '1') { // use private key recover
-              this.restoreAccountOBJ = C.recoveryAccount(this.ImpAccount.privateKey)
-              this.restoreAccountOBJ.recoverPhrase = C.getRecoverPhrase(this.ImpAccount.privateKey)
+              if (this.ImpAccount.privateKey.length === 32) {
+                var privateKey = this.ImpAccount.privateKey + this.ImpAccount.privateKey
+              } else {
+                privateKey = this.ImpAccount.privateKey
+              }
+              this.restoreAccountOBJ = C.recoveryAccount(privateKey)
+              this.restoreAccountOBJ.recoverPhrase = C.getRecoverPhrase(privateKey)
               this.restoreAccountOBJ.recoverPhraseArr = this.restoreAccountOBJ.recoverPhrase.split(' ')
               this.phraseArr = this.restoreAccountOBJ.recoverPhraseArr
               console.log(this.phraseArr)
@@ -179,11 +187,29 @@ export default {
               console.log(this.restoreAccountOBJ)
             } else if (this.importMode === '2') { // use recovery phrase recover
               console.log('asd', this.importMode, this.ImpAccount.recoveryPhrase)
-              this.ImpAccount.privateKey = C.recoverPrivate(this.ImpAccount.recoveryPhrase)
-              this.restoreAccountOBJ = C.recoveryAccount(this.ImpAccount.privateKey)
-              this.restoreAccountOBJ.privateKey = C.encryptPrivKey(this.ImpAccount.password, this.restoreAccountOBJ.privateKey)
-              console.log(this.restoreAccountOBJ)
+              var recoveryPhraseArr = this.ImpAccount.recoveryPhrase.split(' ')
+              if (recoveryPhraseArr.length === 24) {
+                this.ImpAccount.privateKey = C.recoverPrivate(this.ImpAccount.recoveryPhrase)
+                this.restoreAccountOBJ = C.recoveryAccount(this.ImpAccount.privateKey)
+                this.restoreAccountOBJ.privateKey = C.encryptPrivKey(this.ImpAccount.password, this.restoreAccountOBJ.privateKey)
+                console.log(this.restoreAccountOBJ)
+              } else if (recoveryPhraseArr.length === 12) {
+                this.ImpAccount.privateKey = C.recoverPrivate(this.ImpAccount.recoveryPhrase) + C.recoverPrivate(this.ImpAccount.recoveryPhrase)
+                this.restoreAccountOBJ = C.recoveryAccount(this.ImpAccount.privateKey)
+                this.restoreAccountOBJ.privateKey = C.encryptPrivKey(this.ImpAccount.password, this.restoreAccountOBJ.privateKey)
+                console.log(this.restoreAccountOBJ)
+              } else {
+                this.$notify.error({
+                  message: 'error',
+                  duration: 2000
+                })
+              }
             }
+            this.restoreAccountOBJ.identicon = createIcon({ // All options are optional
+              seed: this.restoreAccountOBJ.address, // seed used to generate icon data, default: random
+              size: 10, // width/height of the icon in blocks, default: 10
+              scale: 8 // width/height of each block in pixels, default: 5
+            }).toDataURL()
             this.import_page += 1
           } else {
             this.$message({
@@ -266,13 +292,6 @@ export default {
         if (error) console.error(error)
         console.log('QRCode success!')
       })
-    },
-    checkPhrase (data) {
-      if (this.restoreAccountOBJ.recoverPhrase === data) {
-
-      } else {
-
-      }
     },
     creat () {
       C.accountStorage(this.ImpAccount, this.restoreAccountOBJ)
