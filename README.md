@@ -29,10 +29,12 @@ npm run lint
 
 # og-wallet
 
-[download](https://github.com/annchain/OGWallet/releases/tag/v0.1.2)
+[download](https://github.com/annchain/OGWallet/releases/tag/v0.1.5.2)
 
-[mac](https://github.com/annchain/OGWallet/releases/download/v0.1.2/OG-wallet-v0.1.2-darwin-x64.zip)
+[darwin/mac](https://github.com/annchain/OGWallet/releases/download/v0.1.5.2/OG-wallet-darwin-v0.1.5.2-x64.zip)
 
-[linux](https://github.com/annchain/OGWallet/releases/download/v0.1.2/OG-wallet-v0.1.2-linux-x64.zip)
+[mas/mac](https://github.com/annchain/OGWallet/releases/download/v0.1.5.2/OG-wallet-mas-v0.1.5.2-x64.zip)
 
-[windows](https://github.com/annchain/OGWallet/releases/download/v0.1.2/OG-wallet-v0.1.2-win32-x64.zip)
+[linux](https://github.com/annchain/OGWallet/releases/download/v0.1.5.2/OG-wallet-linux-v0.1.5.2-x64.zip)
+
+[windows](https://github.com/annchain/OGWallet/releases/download/v0.1.5.2/OG-wallet-win32-v0.1.5.2-x64.zip)
