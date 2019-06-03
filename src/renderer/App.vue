@@ -3,7 +3,8 @@
     <div id="drag" style="-webkit-app-region: drag">
     </div>
     <div id="app">
-      <router-view></router-view>
+      <router-view>
+      </router-view>
     </div>
   </body>
 </template>

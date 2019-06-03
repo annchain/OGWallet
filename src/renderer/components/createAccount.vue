@@ -2,12 +2,12 @@
   <div id="accountWrapper" v-if="isRouterAlive" v-loading="stepPageLoading" element-loading-text="CREATING...">
     <img id="logoSmall" src="~@/assets/ann.png" alt="electron-vue">
     <!-- <img id="logoSmall" src="~@/assets/logo.png" alt="electron-vue"> -->
-    <el-steps :active="create_page" align-center finish-status="success">
+    <el-steps :active="create_page" align-center finish-status="success" >
       <el-step title="create account" description=""></el-step>
       <el-step title="account information" description=""></el-step>
       <el-step title="confirm recovery phrase" description=""></el-step>
     </el-steps>
-    <div id="menu-icon">
+    <div id="menu-botton">
       <el-button v-show="create_page<=2" type="danger" @click="goAccount" icon="el-icon-close" round>CANCEL</el-button>
       <el-button v-show="create_page>0 & create_page<2" @click="back" type="success" icon="el-icon-back" round>BACK</el-button>
       <el-button v-show="create_page==0 & showLoading" type="success" :loading="true" round>Creating...</el-button>

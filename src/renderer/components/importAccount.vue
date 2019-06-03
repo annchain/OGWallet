@@ -7,7 +7,7 @@
       <el-step title="account information" description=""></el-step>
       <el-step title="confirm recovery phrase" description=""></el-step>
     </el-steps>
-    <div id="menu-icon">
+    <div id="menu-botton">
       <el-button v-show="import_page<=2" type="danger" @click="goAccount" icon="el-icon-close" round>CANCEL</el-button>
       <el-button v-show="import_page>0 & import_page<2" @click="back" type="success" icon="el-icon-back" round>BACK</el-button>
       <el-button v-show="import_page<2" type="success" @click="next" icon="el-icon-check" round>NEXT</el-button>
@@ -186,7 +186,7 @@ export default {
               this.restoreAccountOBJ.privateKey = C.encryptPrivKey(this.ImpAccount.password, this.restoreAccountOBJ.privateKey)
               console.log(this.restoreAccountOBJ)
             } else if (this.importMode === '2') { // use recovery phrase recover
-              console.log('asd', this.importMode, this.ImpAccount.recoveryPhrase)
+              console.log('in here', this.importMode, this.ImpAccount.recoveryPhrase)
               var recoveryPhraseArr = this.ImpAccount.recoveryPhrase.split(' ')
               if (recoveryPhraseArr.length === 24) {
                 this.ImpAccount.privateKey = C.recoverPrivate(this.ImpAccount.recoveryPhrase)
@@ -227,7 +227,8 @@ export default {
       } else if (this.import_page === 1) {
         if (this.importMode === '1') {
           this.phraseRandArr = C.randArr(this.phraseArr)
-          this.import_page += 1
+          console.log('here', this.phraseRandArr)
+          this.import_page += 2
         } else {
           this.import_page += 2
         }
@@ -294,6 +295,7 @@ export default {
       })
     },
     creat () {
+      console.log(this.ImpAccount, this.restoreAccountOBJ)
       C.accountStorage(this.ImpAccount, this.restoreAccountOBJ)
       this.$router.push({ path: '/account' })
     },

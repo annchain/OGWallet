@@ -5,6 +5,7 @@ const CryptoJS = require('crypto-js')
 const promise = require('bluebird')
 const pdfMake = require('pdfmake/build/pdfmake.js')
 const pdfFonts = require('pdfmake/build/vfs_fonts.js')
+const abi = require('ethjs-abi')
 // const config = require('../config/config.js')
 pdfMake.vfs = pdfFonts.pdfMake.vfs
 
@@ -58,6 +59,10 @@ var checkTxStatus = function (txHash) {
 
 var C = {}
 
+C.getExeAcc = function () {
+  return og.newAccount()
+}
+
 C.changeConn = function (url) {
   console.log(url)
   var sql = 'UPDATE conn Set url ="' + url + '" where id = 1'
@@ -79,8 +84,35 @@ C.getNetInfo = function () {
   })
 }
 
+C.getMonitor = function () {
+  // eslint-disable-next-line new-cap
+  return new promise(function (resolve, reject) {
+    og.monitor().then((data) => {
+      console.log(data)
+      if (data.data) {
+        resolve(data)
+      // eslint-disable-next-line no-undef
+      }
+    }).then().catch((err) => {
+      reject(err)
+    })
+  })
+}
+
+C.getReceipt = function (hash) {
+  return og.getReceipt(hash)
+}
+
 C.createAccount = function () {
   return og.newAccount()
+}
+
+C.queryContract = function (address, data) {
+  var form = {
+    'address': address,
+    'data': data
+  }
+  return og.queryContract(form)
 }
 
 C.createAccount_useBip39 = function () {
@@ -136,6 +168,10 @@ C.deleteAccount = function (address) {
   return db.execute('DELETE FROM usr WHERE address == "' + address + '"')
 }
 
+C.deleteContract = function (address) {
+  return db.execute('DELETE FROM contract WHERE address == "' + address + '"')
+}
+
 C.getNonce = function (address) {
   return og.getNonce(address)
 }
@@ -179,7 +215,15 @@ C.saveTransaction = function (tx, hash) {
   return db.execute('INSERT INTO txHistory VALUES (?,?,?,?,?,?)', [hash, tx.status, tx.from, tx.to, tx.amount, time])
 }
 
-C.getTxParams = function (cfrom, cto, cvalue, cpublicKey, cpublicKeyRaw, cnonce) {
+C.saveContract = function (txhash, address, name, abi) {
+  var timestamp = Date.parse(new Date())
+  var newDate = new Date()
+  newDate.setTime(timestamp)
+  var time = newDate.toLocaleString('chinese', { hour12: false })
+  return db.execute('INSERT INTO contract VALUES (?,?,?,?,?)', [txhash, address, name, abi, time])
+}
+
+C.getTxParams = function (cfrom, cto, cvalue, cpublicKey, cpublicKeyRaw, cnonce, cdata) {
   var tx = {
     from: cfrom,
     to: cto,
@@ -187,7 +231,8 @@ C.getTxParams = function (cfrom, cto, cvalue, cpublicKey, cpublicKeyRaw, cnonce)
     publicKey: cpublicKey,
     publicKey_raw: cpublicKeyRaw,
     height: 10,
-    nonce: cnonce
+    nonce: cnonce,
+    data: cdata || ''
   }
   return tx
 }
@@ -240,6 +285,62 @@ C.layoutPDF = function (data) {
       reject(err)
     }
   })
+}
+
+C.filterGetFun = function (abiArr) {
+  // eslint-disable-next-line no-array-constructor
+  var result = new Array()
+  for (var i = 0; i < abiArr.length; i++) {
+    var item = abiArr[i]
+    console.log(item)
+    console.log(item.type)
+    if (item.type === 'function' && item.stateMutability === 'view') {
+      result.push(item)
+    }
+  }
+
+  return result
+}
+
+C.filterSetFun = function (abiArr) {
+  // eslint-disable-next-line no-array-constructor
+  var result = new Array()
+  for (var i = 0; i < abiArr.length; i++) {
+    var item = abiArr[i]
+    if (item.type === 'function' && item.stateMutability === 'nonpayable') {
+      result.push(item)
+    }
+  }
+
+  return result
+}
+
+C.filterConstFun = function (abiArr) {
+  // eslint-disable-next-line no-array-constructor
+  var result = new Array()
+  for (var i = 0; i < abiArr.length; i++) {
+    var item = abiArr[i]
+    if (item.type === 'constructor') {
+      result.push(item)
+    }
+  }
+
+  return result
+}
+
+C.toJSON = function (str) {
+  // eslint-disable-next-line no-eval
+  return eval('(' + str + ')')
+}
+
+// @param {array} _interface
+// @param {array} _inputs
+C.encodeMethod = function (_interface, _inputs) {
+  return abi.encodeMethod(_interface, _inputs)
+}
+
+C.decodeMethod = function (_interface, _outputs) {
+  return abi.decodeMethod(_interface, _outputs)
 }
 
 module.exports = C
