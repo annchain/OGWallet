@@ -1,10 +1,10 @@
 var config = {
   'OG_RPC': {
     'HttpProviderList': {
-      'main': 'http://localhost:8808',
-      'costom': 'http://localhost:8888'
+      'main': 'http://47.100.222.11:8000',
+      'costom': 'http://47.100.222.11:8000'
     },
-    'HttpProvider': 'http://localhost:8808'
+    'HttpProvider': 'http://47.100.222.11:8000'
   }
 }
 module.exports = config

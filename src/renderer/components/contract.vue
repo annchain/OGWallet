@@ -25,7 +25,8 @@
       </el-card>
     </div>
     <div id="menu-icon">
-        <div>contract <el-button type="success" icon="icon iconfont icon-jiaoyiguanli" @click="goIndex" circle></el-button></div>
+        <div>contract <el-button type="success" icon="el-icon-document-copy" @click="goExplor" circle></el-button></div>
+        <!-- <div>contract <el-button type="success" icon="icon iconfont icon-jiaoyiguanli" @click="goExplor" circle></el-button></div> -->
       </div>
   </div>
 </template>

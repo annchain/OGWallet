@@ -73,7 +73,7 @@
               <span class="title alt" style="position: relative;top: -28px;left: 10px">{{ accountSelect.account_name }}</span>
             </div>
             <div class="title alt inCard" style="margin-top: 10px;">
-              <el-button id="copyIcon" type="text" icon="el-icon-news" style="margin-right: 4px;color:#2d3e50;font-size:16px" @click="oneKeyCopy(accountSelect.address)"></el-button>
+              <el-button id="copyIcon" type="text" icon="el-icon-copy-document" style="margin-right: 4px;color:#2d3e50;font-size:16px" @click="oneKeyCopy(accountSelect.address)"></el-button>
               {{accountSelect.address}}
             </div>
             <div id="accBalance">
@@ -206,12 +206,12 @@
           </div>
           <div id="TxTo">
             <div class="title alt small" style="display:inline-block;">TO:</div>
-            <el-button id="copyIcon" type="text" icon="el-icon-news" style="margin-left: 45px;color:#2d3e50;font-size:16px" @click="oneKeyCopy(txOBJ.cTo)"></el-button>
+            <el-button id="copyIcon" type="text" icon="el-icon-copy-document" style="margin-left: 45px;color:#2d3e50;font-size:16px" @click="oneKeyCopy(txOBJ.cTo)"></el-button>
             <div class="title alt" style="display:inline-block;margin-left:4px;">{{txOBJ.cTo}}</div>
           </div>
           <div id="TxFrom">
             <div class="title alt small" style="display:inline-block;">FROM:</div>
-            <el-button id="copyIcon" type="text" icon="el-icon-news" style="margin-left: 26px;color:#2d3e50;font-size:16px" @click="oneKeyCopy(txOBJ.cFrom)"></el-button>
+            <el-button id="copyIcon" type="text" icon="el-icon-copy-document" style="margin-left: 26px;color:#2d3e50;font-size:16px" @click="oneKeyCopy(txOBJ.cFrom)"></el-button>
             <div class="title alt" style="display:inline-block;margin-left:4px;">{{txOBJ.cFrom}}</div>
           </div>
           <div id="TxComment">
@@ -224,11 +224,11 @@
           </div>
           <div id="TxHashArea">
             <div class="title alt small" style="display:inline-block;">TX HASH:</div>
-            <el-button id="copyIcon" type="text" icon="el-icon-news" style="margin-left: 14px;color:#2d3e50;font-size:16px" @click="oneKeyCopy(txOBJ.txHash)"></el-button>
+            <el-button id="copyIcon" type="text" icon="el-icon-copy-document" style="margin-left: 14px;color:#2d3e50;font-size:16px" @click="oneKeyCopy(txOBJ.txHash)"></el-button>
             <div class="title alt" style="display:inline-block;margin-left:4px;">{{txOBJ.txHashFrage01}}...{{txOBJ.txHashFrage02}}</div>
           </div>
           <canvas id="hashQrcode" style="display:inline-block;zoom:0.6;margin-left:75%;"></canvas>
-          <el-button type="text" style="display:block;margin:auto;margin-top: 10px;">
+          <el-button type="text" style="display:block;margin:auto;margin-top: 10px;" @click="goTxInfo(txOBJ.txHash)">
             Go to   og.scan   for more information
           </el-button>
           <!-- <span slot="footer" class="dialog-footer">
@@ -336,226 +336,14 @@
         </el-dialog>
       </div>
       <div id="menu-icon" v-if="accountInfoShow">
-        <div>back <el-button type="success" icon="icon iconfont icon-icon-" @click="goBack" circle></el-button></div>
+        <div>back <el-button type="success" icon="el-icon-back" @click="goBack" circle></el-button></div>
       </div>
       <div id="menu-icon" v-if="!accountInfoShow">
-        <div>account <el-button type="success" icon="icon iconfont icon-jiaoyijilu" @click="goContract" circle></el-button></div>
+        <div>account <el-button type="success" icon="el-icon-wallet" @click="goContract" circle></el-button></div>
+        <!-- <div>account <el-button type="success" icon="icon iconfont icon-jiaoyijilu" @click="goContract" circle></el-button></div> -->
       </div>
   </div>
 </template>
-
-<style>
-  #accountWrapper {
-    /* background:
-      radial-gradient(
-        ellipse at top left,
-        rgba(255, 255, 255, 1) 40%,
-        rgba(229, 229, 229, .9) 100%
-      ); */
-    background-image: url("~@/assets/background.png"); 
-    height: 100vh;
-    padding: 40px 40px;
-    width: 100vw;
-  }
-
-  #back-icon{
-    position: absolute;
-    left: 30px;
-    bottom: 30px;
-    color: #2c3e51;
-    font-weight: bold;
-    font-family:"Arial";
-  }
-
-  #reflashButton{
-    position: absolute;
-    right: 45px;
-    margin-top: 55px;
-  }
-
-  #accountButtonBIG{
-    position: absolute;
-    top: 45%;
-    left: 36.5%;
-  }
-
-  #accountButton{
-    position: absolute;
-    right: 40px;
-  }
-
-  #cards{
-    /* display: -webkit-box; */
-    /* overflow-x: hidden; */
-    overflow-y: auto;
-    margin-top: -290px;
-    z-index: 1;
-    /* margin-left: 120px; */
-    /* margin-right: 40px; */
-    width: 100%;
-    height: 65%;
-    display: flex;
-    flex-flow: row wrap;
-    align-content: flex-start;
-  }
-  #cards::-webkit-scrollbar {display:none}
-
-  #txTable{
-    position: absolute;
-    right: 40px;
-    top: 220px;
-    width: 66%;
-    height: 57%;
-    margin-left:10px;
-    background-color: transparent;
-    overflow-y: auto;
-    /* display: flex; */
-    /* flex-flow: row wrap; */
-    /* align-content: flex-start; */
-    /* overflow: hidden; */
-  }
-  #txTable::-webkit-scrollbar {display:none}
-
-
-  /* #walletSVG{
-    
-  } */
-
-  #logoSmall {
-    height: auto;
-    margin-bottom: 20px;
-    width: 320px;
-  }
-
-  #box-card{
-    height: 180px;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    margin-left: 10px;
-    background-color: transparent;
-    background: hsla(0,0%,100%,0.3);
-    /* margin-right: 5px; */
-    flex: 0 0 32.5%;
-  }
-
-  #box-card-emptyList{
-    height: 410px;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    margin-left: 10px;
-    background-color: transparent;
-    background: hsla(0,0%,100%,0.3);
-    /* margin-right: 5px; */
-    flex: 0 0 32.5%;
-  }
-
-  #address-identicon{
-    width: 75px;
-    height: 75px;
-    /* display: flex; */
-    border-radius: 50% !important;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    display: inline-block;
-  }
-
-  #address-identicon-accList{
-    width: 38px;
-    height: 38px;
-    /* display: flex; */
-    border-radius: 50% !important;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    /* display: inline-block; */
-  }
-
-  #address-identicon-txList{
-    width: 58px;
-    height: 58px;
-    margin-left:35%;
-    /* display: flex; */
-    border-radius: 50% !important;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    display: inline-block;
-  }
-
-  #Info-card{
-    /* margin-top: -300px; */
-    width: 80px;
-    background-color: transparent;
-  }
-
-  #TxStatus {
-    width: 60%;
-    margin-left:20%;
-    margin-top: 30px;
-  }
-
-  #TxAmount{
-    margin-top: 10px;
-    margin-left:5%;
-  }
-
-  #TxFrom{
-    margin-top: 10px;
-    margin-left:5%;
-  }
-
-  #TxTo{
-    margin-top: 10px;
-    margin-left:5%;
-  }
-
-  #TxComment {
-    margin-top: 10px;
-    margin-left:5%;
-  }
-
-  #TxHashArea {
-    margin-top: 10px;
-    margin-left:5%;
-  }
-
-  #accountButton{
-    margin-left: 200px;
-  }
-
-  #signer-button-cancel{
-    /* position: absolute; */
-    right: 30px;
-    bottom: 30px;
-  }
-
-  #signer-button-confirm{
-    position: absolute;
-    right: 30px;
-    bottom: 30px;
-  }
-
-  #svgImg {
-    text-align:center;
-  }
-
-  /* #hashQrcode{
-
-  } */
-
-  .title.alt.inCard{
-    word-wrap:break-word;
-    word-break:break-all;
-  }
-
-  .large{
-    font-size: 24px !important;
-    margin-top: 10px;
-    margin-left: 20px;
-  }
-
-</style>
 
 <script>
 import C from '../js/common.js'
@@ -665,6 +453,9 @@ export default {
     goAccount () {
       this.$router.push({ path: '/account' })
     },
+    goTxInfo (hash) {
+      this.$router.push({ path: '/txInfo', query: {hash: hash} })
+    },
     goTransaction (account) {
       this.transactionFromShow = true
     },
@@ -696,6 +487,9 @@ export default {
       }).then().catch((err) => {
         console.log(err)
       })
+    },
+    reflashBalance () {
+      // C.getBalance(this.)
     },
     accountInfo (accountData) {
       this.showTitle = false
@@ -1030,3 +824,216 @@ export default {
   }
 }
 </script>
+
+<style>
+  #accountWrapper {
+    /* background:
+      radial-gradient(
+        ellipse at top left,
+        rgba(255, 255, 255, 1) 40%,
+        rgba(229, 229, 229, .9) 100%
+      ); */
+    background-image: url("~@/assets/background.png"); 
+    height: 100vh;
+    padding: 40px 40px;
+    width: 100vw;
+  }
+
+  #back-icon{
+    position: absolute;
+    left: 30px;
+    bottom: 30px;
+    color: #2c3e51;
+    font-weight: bold;
+    font-family:"Arial";
+  }
+
+  #reflashButton{
+    position: absolute;
+    right: 45px;
+    margin-top: 55px;
+  }
+
+  #accountButtonBIG{
+    position: absolute;
+    top: 45%;
+    left: 36.5%;
+  }
+
+  #accountButton{
+    position: absolute;
+    right: 40px;
+  }
+
+  #cards{
+    /* display: -webkit-box; */
+    /* overflow-x: hidden; */
+    overflow-y: auto;
+    margin-top: -290px;
+    z-index: 1;
+    /* margin-left: 120px; */
+    /* margin-right: 40px; */
+    width: 100%;
+    height: 65%;
+    display: flex;
+    flex-flow: row wrap;
+    align-content: flex-start;
+  }
+  #cards::-webkit-scrollbar {display:none}
+
+  #txTable{
+    position: absolute;
+    right: 40px;
+    top: 220px;
+    width: 66%;
+    height: 57%;
+    margin-left:10px;
+    background-color: transparent;
+    overflow-y: auto;
+    /* display: flex; */
+    /* flex-flow: row wrap; */
+    /* align-content: flex-start; */
+    /* overflow: hidden; */
+  }
+  #txTable::-webkit-scrollbar {display:none}
+
+
+  /* #walletSVG{
+    
+  } */
+
+  #logoSmall {
+    height: auto;
+    margin-bottom: 20px;
+    width: 320px;
+  }
+
+  #box-card{
+    height: 180px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+    background-color: transparent;
+    background: hsla(0,0%,100%,0.3);
+    /* margin-right: 5px; */
+    flex: 0 0 32.5%;
+  }
+
+  #box-card-emptyList{
+    height: 410px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+    background-color: transparent;
+    background: hsla(0,0%,100%,0.3);
+    /* margin-right: 5px; */
+    flex: 0 0 32.5%;
+  }
+
+  #address-identicon{
+    width: 75px;
+    height: 75px;
+    /* display: flex; */
+    border-radius: 50% !important;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    display: inline-block;
+  }
+
+  #address-identicon-accList{
+    width: 38px;
+    height: 38px;
+    /* display: flex; */
+    border-radius: 50% !important;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    /* display: inline-block; */
+  }
+
+  #address-identicon-txList{
+    width: 58px;
+    height: 58px;
+    margin-left:35%;
+    /* display: flex; */
+    border-radius: 50% !important;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    display: inline-block;
+  }
+
+  #Info-card{
+    /* margin-top: -300px; */
+    width: 80px;
+    background-color: transparent;
+  }
+
+  #TxStatus {
+    width: 60%;
+    margin-left:20%;
+    margin-top: 30px;
+  }
+
+  #TxAmount{
+    margin-top: 10px;
+    margin-left:5%;
+  }
+
+  #TxFrom{
+    margin-top: 10px;
+    margin-left:5%;
+  }
+
+  #TxTo{
+    margin-top: 10px;
+    margin-left:5%;
+  }
+
+  #TxComment {
+    margin-top: 10px;
+    margin-left:5%;
+  }
+
+  #TxHashArea {
+    margin-top: 10px;
+    margin-left:5%;
+  }
+
+  #accountButton{
+    margin-left: 200px;
+  }
+
+  #signer-button-cancel{
+    /* position: absolute; */
+    right: 30px;
+    bottom: 30px;
+  }
+
+  #signer-button-confirm{
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
+  }
+
+  #svgImg {
+    text-align:center;
+  }
+
+  /* #hashQrcode{
+
+  } */
+
+  .title.alt.inCard{
+    word-wrap:break-word;
+    word-break:break-all;
+  }
+
+  .large{
+    font-size: 24px !important;
+    margin-top: 10px;
+    margin-left: 20px;
+  }
+
+</style>

@@ -143,7 +143,7 @@
       </el-dialog>
     </div>
     <div id="menu-icon" >
-      <div>back <el-button type="success" icon="icon iconfont icon-icon-" @click="goBack" circle></el-button></div>
+      <div>back <el-button type="success" icon="el-icon-back" @click="goBack" circle></el-button></div>
     </div>
   </div>
 </template>

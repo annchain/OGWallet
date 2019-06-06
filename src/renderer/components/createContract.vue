@@ -396,10 +396,13 @@ export default {
   border-radius: 50% !important;
 }
 #selectedName-list{
+  position: relative;
+  top: -10px;
+  left: 4px;
   font-size: 14px
 }
 #selectedAddr-list{
-  font-size: 12px
+  font-size: 11px
 }
 .el-textarea__inner{
   background-color: rgba(236,247,247,0.8) !important;

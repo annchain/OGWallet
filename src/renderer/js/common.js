@@ -88,7 +88,7 @@ C.getMonitor = function () {
   // eslint-disable-next-line new-cap
   return new promise(function (resolve, reject) {
     og.monitor().then((data) => {
-      console.log(data)
+      // console.log(data)
       if (data.data) {
         resolve(data)
       // eslint-disable-next-line no-undef
@@ -103,8 +103,32 @@ C.getReceipt = function (hash) {
   return og.getReceipt(hash)
 }
 
+C.getPeer = function () {
+  return og.peers_info()
+}
+
 C.createAccount = function () {
   return og.newAccount()
+}
+
+C.getSeq = function (num) {
+  return og.sequencerInfo(num)
+}
+
+C.getSeqByHash = function (hash) {
+  return og.sequencerInfoByHash(hash)
+}
+
+C.getSeqTxNum = function (num) {
+  return og.sequencer_confirm_tx(num)
+}
+
+C.getTransaction = function (hash) {
+  return og.getTransaction(hash)
+}
+
+C.getTransactionByAddress = function (address) {
+  return og.getTransactionByAddress(address)
 }
 
 C.queryContract = function (address, data) {

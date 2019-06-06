@@ -37,7 +37,7 @@
         width="50%"
         top="0.5%"
         :show-close="false"
-        style="overflow: hidden">
+        style="overflow: auto">
         <div class="title alt small" style="margin-top: 10px;">now connecting to ...</div>
         <div id="networkStatusInfo">
           {{nowLinkTo}}
@@ -45,7 +45,12 @@
         <div class="title alt small" style="margin-top: 10px;">info:</div>
         <div id="networkStatusInfo">
           <pre style="overflow-x: auto;white-space: pre-line;">
-            <code>{{network_status}}</code>
+            <json-viewer
+              :value="network_status"
+              :expand-depth=5
+              copyable
+              boxed
+              sort></json-viewer>
           </pre>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -324,7 +329,7 @@
 
   #networkStatusWords{
     position: absolute;
-    top:26px;
+    top:24px;
     right:60px;
   }
 

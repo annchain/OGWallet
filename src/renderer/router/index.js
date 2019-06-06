@@ -51,6 +51,31 @@ export default new Router({
       component: require('@/components/explor').default
     },
     {
+      path: '/connection',
+      name: 'connection-page',
+      component: require('@/components/connectionInfo').default
+    },
+    {
+      path: '/seqInfo',
+      name: 'seqInfo-page',
+      component: require('@/components/seqInfo').default
+    },
+    {
+      path: '/txInfo',
+      name: 'txInfo-page',
+      component: require('@/components/txInfo').default
+    },
+    {
+      path: '/addressInfo',
+      name: 'addressInfo-page',
+      component: require('@/components/addressInfo').default
+    },
+    {
+      path: '/jump',
+      name: 'jump-page',
+      component: require('@/components/jumpPage').default
+    },
+    {
       path: '*',
       redirect: '/'
     }
