@@ -1,7 +1,7 @@
 {
   "name": "OG-wallet",
   "productName": "OG-wallet",
-  "version": "0.0.1",
+  "version": "0.2.4",
   "author": "tonystig <tony.stig@icloud.com>",
   "description": "An OG desktop client wallet.",
   "license": "MIT",
