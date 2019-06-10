@@ -127,6 +127,10 @@ C.getTransaction = function (hash) {
   return og.getTransaction(hash)
 }
 
+C.net_io = function () {
+  return og.net_io()
+}
+
 C.getTransactionByAddress = function (address) {
   return og.getTransactionByAddress(address)
 }

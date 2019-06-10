@@ -403,10 +403,10 @@ export default {
   },
   created: function () {
     this.accountPageLoading = true
-    setTimeout(() => {
+    setInterval(() => {
       sqlite.query('SELECT * FROM usr').then((data) => {
         this.accountList = data.data
-        console.log(this.accountList)
+        // console.log(this.accountList)
         for (var j = 0; j < this.accountList.length; j++) {
           var seed = this.accountList[j].address
           this.accountList[j].identicon = createIcon({ // All options are optional
@@ -414,6 +414,7 @@ export default {
             size: 10, // width/height of the icon in blocks, default: 10
             scale: 8 // width/height of each block in pixels, default: 5
           }).toDataURL()
+          this.reflashBalance(this.accountList[j].address)
         }
         this.accountPageLoading = false
       }).then().catch((err) => {
@@ -488,8 +489,18 @@ export default {
         console.log(err)
       })
     },
-    reflashBalance () {
-      // C.getBalance(this.)
+    reflashBalance (address) {
+      C.getBalance(address).then((data) => {
+        var balanceNew = data.data.balance
+        var sql = 'UPDATE usr SET balance_OG = ' + balanceNew + ' where address = ' + '"' + address + '"'
+        // console.log(sql)
+        sqlite.execute(sql)
+      }).then().catch((e) => {
+        this.$message({
+          message: e.toString(),
+          type: 'error'
+        })
+      })
     },
     accountInfo (accountData) {
       this.showTitle = false
@@ -598,6 +609,7 @@ export default {
               // reload account page
               var sql = 'SELECT * from txHistory where cFrom == "' + this.accountSelect.address + '" order by ConfirmTime desc'
               sqlite.query(sql).then((data) => {
+                this.accountInfo(this.accountSelect)
                 this.transactionData = data.data
                 for (var k = 0; k < this.transactionData.length; k++) {
                   var fromSeed = this.transactionData[k].cFrom

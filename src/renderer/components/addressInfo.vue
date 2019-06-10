@@ -284,6 +284,7 @@ export default {
     height: 100vh;
     padding: 40px 40px;
     width: 100vw;
+    overflow: hidden;
   }
   .addressTitle{
     display: flex;
@@ -320,8 +321,10 @@ export default {
   }
   .addressTxList{
     margin-top:40px;
-
+    height: 310px;
+    overflow-y: auto;
   }
+  .addressTxList::-webkit-scrollbar {display:none}
   .addressTxInfo{
     width: 60%;
     height: 140px;
