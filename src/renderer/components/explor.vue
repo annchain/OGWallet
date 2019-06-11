@@ -101,7 +101,7 @@
             type="text"
             @click="goSeqInfo(monitor.status.height)"
             v-if="netWork_GREEN"
-          >3 Sec.</el-button>
+          >{{confirm_time || 0}} Sec.</el-button>
           <el-button type="text" v-if="netWork_RED">net work error</el-button>
         </div>
       </el-card>
@@ -121,7 +121,7 @@
             type="text"
             @click="goSeqInfo(monitor.status.height)"
             v-if="netWork_GREEN"
-          >99%</el-button>
+          >{{confirm_rate}}</el-button>
           <el-button type="text" v-if="netWork_RED">net work error</el-button>
         </div>
       </el-card>
@@ -183,6 +183,8 @@ export default {
       }
     }
     return {
+      confirm_time: '0',
+      confirm_rate: '0%',
       avgSend: 0,
       avgRecv: 0,
       totalSend: 0,
@@ -284,6 +286,14 @@ export default {
             type: 'error'
           })
         })
+    },
+    getConfirmStatus () {
+      C.getConfirmStatus().then((data) => {
+        this.confirm_time = data.data.confirm_time
+        this.confirm_rate = data.data.confirm_rate
+      }).then().catch((e) => {
+        // console.log(e)
+      })
     },
     queryNet_io () {
       C.net_io().then((data) => {
@@ -781,7 +791,7 @@ export default {
 }
 .networkArea {
   margin-top: 10px;
-  margin-left: 40px;
+  margin-left: 10px;
   width: 657px;
 }
 .seqCard {

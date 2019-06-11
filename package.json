@@ -1,7 +1,7 @@
 {
   "name": "OG-wallet",
   "productName": "OG-wallet",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "author": "tonystig <tony.stig@icloud.com>",
   "description": "An OG desktop client wallet.",
   "license": "MIT",
@@ -41,7 +41,7 @@
     "install": "^0.12.2",
     "keccak": "^2.0.0",
     "npm": "^6.9.0",
-    "og-sdk": "^0.2.8",
+    "og-sdk": "^0.2.9",
     "os": "^0.1.1",
     "pdfmake": "^0.1.56",
     "qrcode": "^1.3.2",

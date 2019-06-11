@@ -6,8 +6,10 @@ const promise = require('bluebird')
 const pdfMake = require('pdfmake/build/pdfmake.js')
 const pdfFonts = require('pdfmake/build/vfs_fonts.js')
 const abi = require('ethjs-abi')
-// const config = require('../config/config.js')
+const config = require('../config/config.js')
 pdfMake.vfs = pdfFonts.pdfMake.vfs
+
+var initurl = config.OG_RPC.HttpProvider
 
 var og = new OG()
 
@@ -15,6 +17,10 @@ db.query('SELECT * from conn where id = 1').then((data) => {
   console.log(data.data[0].url)
   og.setProvider(
     new OG.providers.HttpProvider(data.data[0].url)
+  )
+}).then().catch((e) => {
+  og.setProvider(
+    new OG.providers.HttpProvider(initurl)
   )
 })
 
@@ -121,6 +127,10 @@ C.getSeqByHash = function (hash) {
 
 C.getSeqTxNum = function (num) {
   return og.sequencer_confirm_tx(num)
+}
+
+C.getConfirmStatus = function () {
+  return og.confirm_status()
 }
 
 C.getTransaction = function (hash) {

@@ -496,10 +496,7 @@ export default {
         // console.log(sql)
         sqlite.execute(sql)
       }).then().catch((e) => {
-        this.$message({
-          message: e.toString(),
-          type: 'error'
-        })
+        // console.log(e)
       })
     },
     accountInfo (accountData) {
