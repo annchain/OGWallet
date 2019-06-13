@@ -124,7 +124,7 @@
     </main>
     <div id="menu-icon">
       <div>index
-        <el-button type="success" icon="icon iconfont icon-caidan1" @click="goAccount" circle></el-button>
+        <el-button type="success" icon="icon iconfont icon-caidan1" @click="goAccount" circle style="box-shadow:3px 3px 8px 0px rgba(157,163,180,0.4)"></el-button>
       </div>
     </div>
   </div>

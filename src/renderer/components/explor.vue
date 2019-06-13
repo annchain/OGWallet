@@ -160,7 +160,7 @@
     <div id="menu-icon">
       <div>
         explor
-        <el-button type="success" icon="el-icon-link" @click="goIndex" circle></el-button>
+        <el-button type="success" icon="el-icon-link" @click="goIndex" circle style="box-shadow:3px 3px 8px 0px rgba(157,163,180,0.4)"></el-button>
       </div>
     </div>
   </div>
@@ -746,6 +746,7 @@ export default {
   height: 100vh;
   padding: 40px 40px;
   width: 100vw;
+  overflow: hidden;
 }
 .explor-top {
   display: flex;

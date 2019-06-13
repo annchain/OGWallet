@@ -126,7 +126,7 @@
       </el-card>
     </div>
     <div id="menu-icon">
-      <div>back <el-button type="success" icon="el-icon-back" @click="goBack" circle></el-button></div>
+      <div>back <el-button type="success" icon="el-icon-back" @click="goBack" circle style="box-shadow:3px 3px 8px 0px rgba(157,163,180,0.4)"></el-button></div>
     </div>
   </div>
 </template>
