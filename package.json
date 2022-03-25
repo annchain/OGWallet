@@ -69,7 +69,7 @@
     "devtron": "^1.4.0",
     "vue-electron": "^1.0.6",
     "vuex-electron": "^1.0.0",
-    "electron": "^2.0.18",
+    "electron": "^13.6.6",
     "electron-debug": "^1.5.0",
     "electron-devtools-installer": "^2.2.4",
     "electron-packager": "^13.0.1",
